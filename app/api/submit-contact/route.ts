@@ -1,18 +1,51 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+// app/api/submit-contact/route.ts
 
-export async function POST(request: Request) {
-  const { name, email, message } = await request.json()
+import { supabase } from '../../../lib/supabaseClient'; // تأكد من المسار الصحيح
+import { NextRequest, NextResponse } from 'next/server';
 
-  const { data, error } = await supabase
-    .from('contacts')
-    .insert([{ name, email, message }])
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  try {
+    const { name, whatsapp, message } = await req.json();
 
-  if (error) {
-    console.error('Supabase error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    // التأكد من وجود البيانات
+    if (!name || !whatsapp || !message) {
+      return NextResponse.json(
+        { error: 'جميع الحقول (الاسم، الواتساب، الرسالة) مطلوبة.' },
+        { status: 400 }
+      );
+    }
+
+    // إدخال البيانات في جدول 'contacts' مع التاريخ
+    const { data, error } = await supabase
+      .from('contacts')
+      .insert([
+        {
+          name,
+          whatsapp,
+          message,
+          created_at: new Date().toISOString(), // إضافة التاريخ الحالي
+        },
+      ]);
+
+    // التحقق من وجود أخطاء أثناء الإدخال
+    if (error) {
+      console.error('Supabase error:', error.message);
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
+    }
+
+    // إرسال استجابة بنجاح
+    return NextResponse.json(
+      { message: 'تم إرسال البيانات بنجاح!', data },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error inserting data:', error);
+    return NextResponse.json(
+      { error: 'حدث خطأ أثناء إرسال البيانات.' },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json({ success: true }, { status: 200 })
 }
-

@@ -12,7 +12,7 @@ export function ContactForm() {
     const formData = new FormData(e.currentTarget)
     const data = {
       name: formData.get('name'),
-      email: formData.get('email'),
+      whatsapp: formData.get('whatsapp'), // تغيير email إلى whatsapp
       message: formData.get('message'),
     }
 
@@ -45,8 +45,8 @@ export function ContactForm() {
         <input type="text" id="name" name="name" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required />
       </div>
       <div>
-        <label htmlFor="email" className="block text-gray-800 mb-2">البريد الإلكتروني</label>
-        <input type="email" id="email" name="email" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required />
+        <label htmlFor="whatsapp" className="block text-gray-800 mb-2">رقم الواتساب</label>
+        <input type="text" id="whatsapp" name="whatsapp" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" required />
       </div>
       <div>
         <label htmlFor="message" className="block text-gray-800 mb-2">الرسالة</label>

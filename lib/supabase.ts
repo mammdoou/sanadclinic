@@ -1,12 +1,22 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// التأكد من أن المتغيرات البيئية موجودة
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// التحقق من أن المتغيرات البيئية موجودة
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// التحقق من وجود المتغيرات قبل إنشاء عميل Supabase
+// إذا كانت المتغيرات البيئية مفقودة، إطلاق خطأ مع رسالة واضحة
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase URL or Anon Key is missing in the environment variables.')
+  throw new Error('Environment variables NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// إنشاء عميل Supabase
+let supabase: SupabaseClient;
+try {
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
+} catch (error) {
+  console.error('Failed to initialize Supabase client:', error);
+  throw new Error('Supabase client initialization failed.');
+}
+
+// تصدير العميل للاستخدام في باقي المشروع
+export { supabase };
