@@ -4,6 +4,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'v0 App',
   description: 'Created with v0',
+  verification: {
+    google: 'msHd4AwcWHg75vSVWEzVXpu5-0NPFWOquLSa75_6_F8',
+  },
 }
 
 export default function RootLayout({
